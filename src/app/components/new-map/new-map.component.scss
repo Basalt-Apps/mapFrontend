@@ -1,0 +1,40 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  .form {
+    app-file-upload {
+      margin: 30px 30px ;
+    }
+
+    form {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+
+      width: 300px;
+
+      input {
+        height: 20px;
+        font-size: 20px;
+        width: 296px;
+        position: relative;
+        left: 2px
+      }
+
+      button {
+        width: 120px;
+        height: 50px;
+        font-size: 30px;
+        margin-top: 20px;
+      }
+    }
+
+  }
+}

@@ -1,0 +1,31 @@
+@import "../../../theme/variables";
+
+$width: 300px;
+
+.main {
+
+  width: calc($width + 2px);
+
+  .file-input {
+    display: none;
+  }
+
+  .file-upload {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    height: 100px;
+  }
+
+  .img {
+    border: none;
+    width: $width;
+
+    img {
+      width: 100%;
+      border: none;
+    }
+  }
+}

@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+@import "theme/palette";
+@import "theme/variables";
+
+
+body {
+  margin: 0;
+
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+
+  font-family: Arial, serif;
+
+  color: $light;
+  background-color: $dark;
+}

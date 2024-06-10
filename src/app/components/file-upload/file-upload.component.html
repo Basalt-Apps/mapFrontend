@@ -1,0 +1,16 @@
+<div class="main">
+  <input type="file" class="file-input"
+         (change)="onFileSelected($event)" #fileUpload>
+
+  <div class="file-upload">
+
+    <button style="" class="upload-btn"
+            (click)="fileUpload.click()">Upload
+    </button>
+    {{fileName || "No file uploaded yet."}}
+
+  </div>
+  <div class="img" *ngIf="(image$ | async) as image">
+    <img [src]="image" alt="File not Found" />
+  </div>
+</div>

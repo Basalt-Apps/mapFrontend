@@ -1,0 +1,15 @@
+<ng-container *ngIf="(map$ | async) as map; else noMap">
+  <img
+    [src]="map.ImageURL"
+    alt=""
+    id="mapImg"
+    appMapInit
+    (init)="onMapInit()"
+    [style.left]="mapPos.x + 'px'"
+    [style.top]="mapPos.y + 'px'"
+    [style.width]="zoomLevel + '%'"
+  >
+</ng-container>
+<ng-template #noMap>
+
+</ng-template>

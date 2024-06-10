@@ -1,0 +1,12 @@
+<div class="new" [routerLink]="['/', 'map', 'new']">New Map</div>
+
+<ng-container *ngIf="(maps$ | async) as maps">
+  <div class="list">
+    <app-map-list-item
+      *ngFor="let map of maps; let last = last"
+      [map]="map"
+      [last]="last"
+      [routerLink]="['/', 'map', map.ID]"
+    ></app-map-list-item>
+  </div>
+</ng-container>

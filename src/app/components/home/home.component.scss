@@ -1,0 +1,31 @@
+@import "../../../theme/variables";
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  margin-top: 30px;
+  width: 100%;
+
+  .new {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+    border: $border;
+    border-radius: 10px;
+    width: 200px;
+    height: 70px;
+    font-size: 30px;
+  }
+
+  .list {
+    width: 80%;
+    border-top: $border;
+    border-right: $border;
+    border-left: $border;
+    border-radius: 4px;
+  }
+}

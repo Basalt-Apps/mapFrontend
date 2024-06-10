@@ -1,0 +1,10 @@
+:host {
+  width: 100vh;
+  height: 100vh;
+
+  img {
+    position: absolute;
+
+    transition: width 50ms linear, left 50ms linear, top 50ms linear;
+  }
+}

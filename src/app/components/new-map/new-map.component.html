@@ -1,0 +1,9 @@
+<div class="main">
+  <div class="form">
+    <app-file-upload (returnObservable)="uploadReturn($event)" uploadUrl="api/images"/>
+    <form [formGroup]="form">
+      <input type="text" formControlName="name" placeholder="Name*" (keyup.enter)="onSubmit()"/>
+      <button (keyup.enter)="onSubmit()" (click)="onSubmit()">Submit</button>
+    </form>
+  </div>
+</div>
