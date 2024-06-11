@@ -4,5 +4,5 @@ img.pin {
   height: 40px;
   z-index: 0;
 
-  transition: left 30ms linear, top 30ms linear;
+  transition: left 30ms linear, top 30ms linear, width 30ms linear, height 30ms linear;
 }
