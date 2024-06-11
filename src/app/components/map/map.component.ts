@@ -17,6 +17,7 @@ import {PinService} from "../../services/pin.service";
 import { PinModel } from '../../models/pin.model';
 import { MarkerComponent } from './marker/marker.component';
 import { RealInitDirective } from '../../directives/real-init.directive';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -160,4 +161,6 @@ export class MapComponent implements OnInit {
       )
     )
   }
+
+  protected readonly environment = environment;
 }

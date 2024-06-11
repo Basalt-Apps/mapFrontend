@@ -1,5 +1,5 @@
 <ng-container *ngIf="(map$ | async) as map; else noMap">
-    <img [src]="map.ImageURL"
+    <img [src]="environment.backendUrl + '/api/images/' + map.ImageURL"
          alt=""
          id="mapImg"
          appRealInit
