@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, map, Observable, tap} from "rxjs";
 import {CommonModule} from "@angular/common";
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-file-upload',
@@ -36,7 +37,7 @@ export class FileUploadComponent {
       const upload$ = this.http.post<{ url: string }>('/' + this.uploadUrl, formData);
 
       this.returnObservable.emit(upload$.pipe(
-        map((url: {url: string}): string => url.url),
+        map((url: {url: string}): string => environment.backendUrl + '/api/images/' + url.url),
         tap((url: string): void => this.image$.next(url))
       ))
     }
