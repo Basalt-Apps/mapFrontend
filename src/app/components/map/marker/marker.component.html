@@ -1,0 +1,13 @@
+<img src="map-marker.svg"
+     class="pin"
+     alt="pin"
+     [style.left]="(pin.Pos.x) + 'px'"
+     [style.top]="(pin.Pos.y) + 'px'"
+     [style.width]="(basePinSize * zoomLevel / 100) + 'px'"
+     [style.height]="(basePinSize * zoomLevel / 100) + 'px'"
+>
+<ng-container *ngIf="clicked; then test"/>
+
+<ng-template #test>
+
+</ng-template>

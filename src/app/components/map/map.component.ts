@@ -1,28 +1,43 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {map, Observable, switchMap} from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatestWith,
+  filter,
+  map,
+  Observable,
+  switchMap
+} from "rxjs";
 import {ActivatedRoute, Params} from "@angular/router";
 import {MapModel} from "../../models/map.model";
 import {MapDataService} from "../../services/map-data.service";
-import {MapInitDirective} from "../../directives/map-init.directive";
 import {V2} from "../../models/V2.class";
 import {PinDataService} from "../../services/pin-data.service";
 import {PinService} from "../../services/pin.service";
+import { PinModel } from '../../models/pin.model';
+import { MarkerComponent } from './marker/marker.component';
+import { RealInitDirective } from '../../directives/real-init.directive';
 
 @Component({
   selector: 'app-map',
   standalone: true,
   imports: [
     CommonModule,
-    MapInitDirective
+    RealInitDirective,
+    MarkerComponent
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
 export class MapComponent implements OnInit {
   public mapPos = new V2();
+  public mapPos$ = new BehaviorSubject<V2>(new V2())
+  public basePinSize = 40
+  public zoomPinMod = 4
   public zoomLevel = 100;
+  public zoomLevel$ = new BehaviorSubject<number>(100);
   public map$!: Observable<MapModel | null>
+  public pins$!: Observable<PinModel[]>
 
   constructor(
     private route: ActivatedRoute,
@@ -43,6 +58,7 @@ export class MapComponent implements OnInit {
   public onMapInit(): void {
     const mapImg = this.elRef.nativeElement.querySelector('#mapImg') as HTMLImageElement
 
+    this.placePins(mapImg);
     this.draggingLogic(mapImg);
     this.scrollingLogic(mapImg);
   }
@@ -78,6 +94,7 @@ export class MapComponent implements OnInit {
       const movement = layerPos.subtract(initialMousePos)
 
       this.mapPos = baseline.add(movement)
+      this.mapPos$.next(this.mapPos)
     })
 
 
@@ -93,19 +110,54 @@ export class MapComponent implements OnInit {
 
       this.mapPos = this.mapPos.add(oldSize.subtract(newSize).hadamardProduct(mapSpacePos))
       this.zoomLevel *= widthScalar;
+      setTimeout(() => this.mapPos$.next(this.mapPos), 50)
+      this.zoomLevel$.next(this.zoomLevel)
     })
   }
 
   private handleClick(mapImg: HTMLImageElement, event: MouseEvent): void {
     const mapSize = new V2(mapImg.offsetWidth, mapImg.offsetHeight);
     const layer = new V2(event.layerX, event.layerY);
-    const client = new V2(event.clientX, event.clientY);
 
     const mapSpacePos = layer.hadamardDivision(mapSize)
-    this.pinService.createNew({
-      mapId: 7,
-      content: 'none',
-      y: mapSpacePos 
-    })
+
+
+    this.map$.pipe(
+      map((map: MapModel | null): number => map?.ID ?? -1),
+      filter((id: number): boolean => id >= 0),
+      switchMap((id: number): Observable<void> => this.pinService.createNew({
+        name: 'fourth',
+        mapId: id,
+        content: 'none',
+        y: mapSpacePos.y,
+        x: mapSpacePos.x,
+      }))
+    ).subscribe()
+  }
+
+  private placePins(mapImg: HTMLImageElement): void {
+    this.pins$ = this.map$.pipe(
+      map((map: MapModel | null): number => map?.ID ?? -1),
+      combineLatestWith(this.pinDataService.getAll(), this.mapPos$, this.zoomLevel$),
+      filter(([id, pins]: [number, PinModel[], V2, number]): boolean =>
+        id >= 0 && pins.length > 0),
+      map(([id, pins, mapPos, zoomLevel]: [number, PinModel[], V2, number]): PinModel[] => pins
+          .filter((pin: PinModel) => pin.MapID === id)
+          .map((pin: PinModel) => {
+            return {
+              Pos: pin.Pos
+                .hadamardProduct(new V2(mapImg))
+                .add(mapPos)
+                .subtract(
+                  new V2(this.basePinSize * zoomLevel / 100, this.basePinSize * zoomLevel / 100).hadamardDivision(new V2(2, 1.1))
+                ),
+              MapID: pin.MapID,
+              ID: pin.ID,
+              Name: pin.Name,
+              Content: pin.Content
+            }
+          })
+      )
+    )
   }
 }

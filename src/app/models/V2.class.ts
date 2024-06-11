@@ -2,9 +2,14 @@ export class V2 {
   public x: number;
   public y: number;
 
-  public constructor(x?: number, y?: number) {
-    this.x = x ?? 0;
-    this.y = y ?? 0;
+  public constructor(x?: number | HTMLImageElement, y?: number) {
+    if (typeof x === 'object') {
+      this.x = x.offsetWidth;
+      this.y = x.offsetHeight
+    } else {
+      this.x = x ?? 0;
+      this.y = y ?? 0;
+    }
   }
 
   public add(other: V2): V2 {

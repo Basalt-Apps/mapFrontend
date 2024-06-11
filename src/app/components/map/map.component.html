@@ -1,14 +1,23 @@
 <ng-container *ngIf="(map$ | async) as map; else noMap">
-  <img
-    [src]="map.ImageURL"
-    alt=""
-    id="mapImg"
-    appMapInit
-    (init)="onMapInit()"
-    [style.left]="mapPos.x + 'px'"
-    [style.top]="mapPos.y + 'px'"
-    [style.width]="zoomLevel + '%'"
-  >
+    <img [src]="map.ImageURL"
+         alt=""
+         id="mapImg"
+         appRealInit
+         (init)="onMapInit()"
+         [style.left]="mapPos.x + 'px'"
+         [style.top]="mapPos.y + 'px'"
+         [style.width]="zoomLevel + '%'"
+    >
+    <ng-container *ngIf="(pins$ | async) as pins">
+        <ng-container *ngIf="pins.length > 0">
+            <app-marker
+                    *ngFor="let pin of pins"
+                    [pin]="pin"
+                    [basePinSize]="basePinSize"
+                    [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
+            />
+        </ng-container>
+    </ng-container>
 </ng-container>
 <ng-template #noMap>
 

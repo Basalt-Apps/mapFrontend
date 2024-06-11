@@ -1,8 +1,8 @@
-import { MapInitDirective } from './map-init.directive';
+import { RealInitDirective } from './real-init.directive';
 
 describe('MapInitDirective', () => {
   it('should create an instance', () => {
-    const directive = new MapInitDirective();
+    const directive = new RealInitDirective();
     expect(directive).toBeTruthy();
   });
 });

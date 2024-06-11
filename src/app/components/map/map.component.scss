@@ -2,9 +2,11 @@
   width: 100vh;
   height: 100vh;
 
-  img {
+  img#mapImg {
     position: absolute;
 
-    transition: width 50ms linear, left 50ms linear, top 50ms linear;
+    transition: width 30ms linear, left 30ms linear, top 30ms linear;
   }
+
+
 }

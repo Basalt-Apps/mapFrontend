@@ -1,10 +1,10 @@
 import {Directive, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Directive({
-  selector: '[appMapInit]',
+  selector: '[appRealInit]',
   standalone: true
 })
-export class MapInitDirective implements OnInit {
+export class RealInitDirective implements OnInit {
   @Output() public init = new EventEmitter<void>();
 
   constructor() { }
