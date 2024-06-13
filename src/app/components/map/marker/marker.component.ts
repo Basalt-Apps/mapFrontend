@@ -2,11 +2,8 @@ import {
   Component,
   Input,
   OnChanges,
-  OnInit,
-  SimpleChanges
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PinModel } from '../../../models/pin.model';
 import { NgChanges } from '../../../models/ng-changes.type';
 import { OmitPinPos } from '../../../models/omit-pin-pos.type';
 import { V2 } from '../../../models/V2.class';
