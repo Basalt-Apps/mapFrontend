@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import { V2 } from '../models/V2.class';
 import { MapUpdate } from '../models/map-update.interface';
-
-
 
 @Injectable({
   providedIn: 'root'
