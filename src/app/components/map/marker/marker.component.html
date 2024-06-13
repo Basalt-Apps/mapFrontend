@@ -5,6 +5,7 @@
      [style.top]="(pos$|async)?.y + 'px'"
      [style.width]="pinSize + 'px'"
      [style.height]="pinSize + 'px'"
+     (click)="onClick()"
 >
 <!--<img src="map-marker.svg"-->
 <!--     class="pin fake"-->

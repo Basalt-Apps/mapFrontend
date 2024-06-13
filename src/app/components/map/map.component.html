@@ -16,6 +16,8 @@
                     [basePinSize]="basePinSize"
                     [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
                     [pos$]="(pinPositions$ | async)?.[i] ?? of()"
+                    [mapImg]="mapImg"
+                    [mapPos]="mapPos"
             />
         </ng-container>
     </ng-container>

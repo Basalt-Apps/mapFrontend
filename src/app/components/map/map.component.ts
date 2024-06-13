@@ -19,6 +19,8 @@ import { MarkerComponent } from './marker/marker.component';
 import { RealInitDirective } from '../../directives/real-init.directive';
 import { environment } from '../../../environments/environment';
 import { OmitPinPos } from '../../models/omit-pin-pos.type';
+import { MapPositionService } from '../../services/map-position.service';
+import { MapUpdate } from '../../models/map-update.interface';
 
 @Component({
   selector: 'app-map',
@@ -41,13 +43,15 @@ export class MapComponent implements OnInit {
   public map$!: Observable<MapModel | null>
   public pins$!: Observable<OmitPinPos[]>
   public pinPositions$!: Observable<Observable<V2>[]>
+  public mapImg!: HTMLImageElement
 
   constructor(
     private route: ActivatedRoute,
     private dataService: MapDataService,
     private pinDataService: PinDataService,
     private pinService: PinService,
-    private elRef: ElementRef
+    private elRef: ElementRef,
+    private mapPositionService: MapPositionService
   ) {
   }
 
@@ -56,10 +60,21 @@ export class MapComponent implements OnInit {
       map((params: Params): number => +params['id']),
       switchMap((id: number) => this.dataService.getById(id))
     )
+    this.mapPositionService.setCallback((data: MapUpdate) => {
+      if (data.mapPos) {
+        this.mapPos = data.mapPos;
+        this.mapPos$.next(data.mapPos)
+      }
+      if (data.zoomLevel) {
+        this.zoomLevel = data.zoomLevel;
+        this.zoomLevel$.next(data.zoomLevel)
+      }
+    })
   }
 
   public onMapInit(): void {
     const mapImg = this.elRef.nativeElement.querySelector('#mapImg') as HTMLImageElement
+    this.mapImg = mapImg
 
     this.placePins(mapImg);
     this.draggingLogic(mapImg);
@@ -169,17 +184,23 @@ export class MapComponent implements OnInit {
         id >= 0 && pins.length > 0),
       map(([id, pins, mapPos, zoomLevel]: [number, PinModel[], V2, number]): Observable<V2>[] => pins
         .filter((pin: PinModel) => pin.MapID === id)
-        .map((pin: PinModel): Observable<V2> => of(pin.Pos
-          .hadamardProduct(new V2(mapImg))
-          .add(mapPos)
-          .subtract(
-            new V2(1,1).multiply(this.basePinSize * (zoomLevel / this.zoomPinMod + 100 * (1 - 1/this.zoomPinMod)) / 100).hadamardDivision(new V2(2, 1.1))
-          )
-        ))
+        .map((pin: PinModel): Observable<V2> => of(this.transformPos(pin.Pos, mapImg, zoomLevel, mapPos)))
       )
     )
   }
 
+  private transformPos(pos: V2, mapImg: HTMLImageElement, zoomLevel: number, mapPos: V2): V2 {
+    return pos
+      .hadamardProduct(new V2(mapImg))
+      .add(mapPos)
+      .subtract(
+        new V2(1,1)
+          .multiply(this.basePinSize * (zoomLevel / this.zoomPinMod + 100 * (1 - 1/this.zoomPinMod)) / 100)
+          .hadamardDivision(new V2(2, 1.1))
+      )
+  }
+
   protected readonly environment = environment;
   protected readonly of = of;
+  protected readonly V2 = V2;
 }
