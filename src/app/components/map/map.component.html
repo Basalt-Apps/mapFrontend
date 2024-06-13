@@ -11,10 +11,11 @@
     <ng-container *ngIf="(pins$ | async) as pins">
         <ng-container *ngIf="pins.length > 0">
             <app-marker
-                    *ngFor="let pin of pins"
+                    *ngFor="let pin of pins; let i = index"
                     [pin]="pin"
                     [basePinSize]="basePinSize"
                     [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
+                    [pos$]="(pinPositions$ | async)?.[i] ?? of()"
             />
         </ng-container>
     </ng-container>

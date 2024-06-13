@@ -1,11 +1,19 @@
 <img src="map-marker.svg"
      class="pin"
      alt="pin"
-     [style.left]="(pin.Pos.x) + 'px'"
-     [style.top]="(pin.Pos.y) + 'px'"
-     [style.width]="(basePinSize * zoomLevel / 100) + 'px'"
-     [style.height]="(basePinSize * zoomLevel / 100) + 'px'"
+     [style.left]="(pos$|async)?.x + 'px'"
+     [style.top]="(pos$|async)?.y + 'px'"
+     [style.width]="pinSize + 'px'"
+     [style.height]="pinSize + 'px'"
 >
+<!--<img src="map-marker.svg"-->
+<!--     class="pin fake"-->
+<!--     alt="pin"-->
+<!--     [style.left]="((pos$|async)?.x ?? 0) + pinSize / 2 - 4 + 'px'"-->
+<!--     [style.top]="((pos$|async)?.y ?? 0) + pinSize / 2 - 4 + 'px'"-->
+<!--     [style.width]="8 + 'px'"-->
+<!--     [style.height]="8 + 'px'"-->
+<!--&gt;-->
 <ng-container *ngIf="clicked; then test"/>
 
 <ng-template #test>

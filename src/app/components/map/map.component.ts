@@ -5,7 +5,7 @@ import {
   combineLatestWith,
   filter,
   map,
-  Observable,
+  Observable, of,
   switchMap
 } from "rxjs";
 import {ActivatedRoute, Params} from "@angular/router";
@@ -18,6 +18,7 @@ import { PinModel } from '../../models/pin.model';
 import { MarkerComponent } from './marker/marker.component';
 import { RealInitDirective } from '../../directives/real-init.directive';
 import { environment } from '../../../environments/environment';
+import { OmitPinPos } from '../../models/omit-pin-pos.type';
 
 @Component({
   selector: 'app-map',
@@ -38,7 +39,8 @@ export class MapComponent implements OnInit {
   public zoomLevel = 100;
   public zoomLevel$ = new BehaviorSubject<number>(100);
   public map$!: Observable<MapModel | null>
-  public pins$!: Observable<PinModel[]>
+  public pins$!: Observable<OmitPinPos[]>
+  public pinPositions$!: Observable<Observable<V2>[]>
 
   constructor(
     private route: ActivatedRoute,
@@ -122,6 +124,12 @@ export class MapComponent implements OnInit {
 
     const mapSpacePos = layer.hadamardDivision(mapSize)
 
+    console.log('layer', layer)
+    console.log('/')
+    console.log('mapSize', mapSize)
+    console.log('=')
+    console.log('mapSpacePos', mapSpacePos)
+
 
     this.map$.pipe(
       map((map: MapModel | null): number => map?.ID ?? -1),
@@ -139,19 +147,13 @@ export class MapComponent implements OnInit {
   private placePins(mapImg: HTMLImageElement): void {
     this.pins$ = this.map$.pipe(
       map((map: MapModel | null): number => map?.ID ?? -1),
-      combineLatestWith(this.pinDataService.getAll(), this.mapPos$, this.zoomLevel$),
-      filter(([id, pins]: [number, PinModel[], V2, number]): boolean =>
+      combineLatestWith(this.pinDataService.getAll()),
+      filter(([id, pins]: [number, PinModel[]]): boolean =>
         id >= 0 && pins.length > 0),
-      map(([id, pins, mapPos, zoomLevel]: [number, PinModel[], V2, number]): PinModel[] => pins
+      map(([id, pins]: [number, PinModel[]]): OmitPinPos[] => pins
           .filter((pin: PinModel) => pin.MapID === id)
           .map((pin: PinModel) => {
             return {
-              Pos: pin.Pos
-                .hadamardProduct(new V2(mapImg))
-                .add(mapPos)
-                .subtract(
-                  new V2(this.basePinSize * zoomLevel / 100, this.basePinSize * zoomLevel / 100).hadamardDivision(new V2(2, 1.1))
-                ),
               MapID: pin.MapID,
               ID: pin.ID,
               Name: pin.Name,
@@ -160,7 +162,24 @@ export class MapComponent implements OnInit {
           })
       )
     )
+    this.pinPositions$ = this.map$.pipe(
+      map((map: MapModel | null): number => map?.ID ?? -1),
+      combineLatestWith(this.pinDataService.getAll(), this.mapPos$, this.zoomLevel$),
+      filter(([id, pins]: [number, PinModel[], V2, number]): boolean =>
+        id >= 0 && pins.length > 0),
+      map(([id, pins, mapPos, zoomLevel]: [number, PinModel[], V2, number]): Observable<V2>[] => pins
+        .filter((pin: PinModel) => pin.MapID === id)
+        .map((pin: PinModel): Observable<V2> => of(pin.Pos
+          .hadamardProduct(new V2(mapImg))
+          .add(mapPos)
+          .subtract(
+            new V2(1,1).multiply(this.basePinSize * (zoomLevel / this.zoomPinMod + 100 * (1 - 1/this.zoomPinMod)) / 100).hadamardDivision(new V2(2, 1.1))
+          )
+        ))
+      )
+    )
   }
 
   protected readonly environment = environment;
+  protected readonly of = of;
 }
