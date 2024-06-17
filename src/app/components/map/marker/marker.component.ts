@@ -1,7 +1,7 @@
 import {
-  Component,
+  Component, EventEmitter,
   Input,
-  OnChanges, OnInit,
+  OnChanges, OnInit, Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChanges } from '../../../models/ng-changes.type';
@@ -27,6 +27,8 @@ export class MarkerComponent implements OnInit, OnChanges {
   @Input() public mapImg!: HTMLImageElement
   @Input() public mapPos!: V2
 
+  @Output() clicked = new EventEmitter<void>();
+
   public clicked$!: Observable<boolean>;
   public pinSize = this.basePinSize * this.zoomLevel / 100
 
@@ -51,6 +53,7 @@ export class MarkerComponent implements OnInit, OnChanges {
   }
 
   public onClick(): void {
+    this.clicked.emit()
     this.pinPopupService.setClicked(this.pin.ID);
   }
 

@@ -6,7 +6,6 @@ import {MapModel} from "../../models/map.model";
 import {MapDataService} from "../../services/map-data.service";
 import {V2} from "../../models/V2.class";
 import {PinDataService} from "../../services/pin-data.service";
-import {PinService} from "../../services/pin.service";
 import {PinFormComponent} from "./pin-form/pin-form.component";
 import { PinModel } from '../../models/pin.model';
 import { MarkerComponent } from './marker/marker.component';
@@ -46,7 +45,6 @@ export class MapComponent implements OnInit {
     private route: ActivatedRoute,
     private dataService: MapDataService,
     private pinDataService: PinDataService,
-    private pinService: PinService,
     private elRef: ElementRef,
     private pinPopupService: PinPopupService
   ) {
@@ -119,9 +117,9 @@ export class MapComponent implements OnInit {
 
   private handleClick(mapImg: HTMLImageElement, event: MouseEvent): void {
     this.pinPopupService.getIfSet().pipe(take(1),
-      map((set: boolean): boolean | void => this.clicked$.value !== null ? void this.clicked$.next(null) : set),
+      map((set: boolean): boolean | void => this.clicked$.value !== null ? this.clicked$.next(null) : set),
       filter((set: boolean | void): set is boolean => set !== void 0),
-      switchMap((set: boolean): Observable<true | null | void> => of(set ? void this.pinPopupService.unset() : true)),
+      switchMap((set: boolean): Observable<true | null | void> => of(set ? this.pinPopupService.unset() : true)),
       filter((map: true | null | void): boolean => !!map),
     ).subscribe(() => {
       const mapSize = new V2(mapImg.offsetWidth, mapImg.offsetHeight);
@@ -130,7 +128,6 @@ export class MapComponent implements OnInit {
 
       const mapSpacePos = layer.hadamardDivision(mapSize)
 
-      // TODO: FIX TRANSFORMATION HERE
       // TODO: you can open markers without the form closing first, fix this
 
       this.clicked$.next({
@@ -187,6 +184,11 @@ export class MapComponent implements OnInit {
     this.clicked$.next(null);
   }
 
+  public onPinClicked(): void {
+    this.clicked$.next(null);
+  }
+
   protected readonly environment = environment;
   protected readonly of = of;
+
 }
