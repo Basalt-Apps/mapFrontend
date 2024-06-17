@@ -15,8 +15,20 @@
 <!--     [style.width]="8 + 'px'"-->
 <!--     [style.height]="8 + 'px'"-->
 <!--&gt;-->
-<ng-container *ngIf="clicked; then test"/>
+<ng-container *ngIf="clicked$ | async; then pinClicked"/>
 
-<ng-template #test>
-
+<ng-template #pinClicked>
+  <app-popup
+    [style.bottom]="'calc(100vh - ' + ((pos$|async)?.y ?? 0) + 'px)'"
+    [style.left]="((pos$|async)?.x ?? 0) + pinSize / 2 - 150 + 'px'"
+  >
+    <div class="header">
+      <h1>{{pin.Name}}</h1>
+      <div class="buttons">
+        <img src="delete.svg" alt="" (click)="onDeleteButton()">
+        <img src="close.svg" alt="" (click)="onClosePopup()">
+      </div>
+    </div>
+    <p>{{pin.Content}}</p>
+  </app-popup>
 </ng-template>

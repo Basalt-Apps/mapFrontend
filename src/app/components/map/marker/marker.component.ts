@@ -1,23 +1,25 @@
 import {
   Component,
   Input,
-  OnChanges,
+  OnChanges, OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChanges } from '../../../models/ng-changes.type';
 import { OmitPinPos } from '../../../models/omit-pin-pos.type';
 import { V2 } from '../../../models/V2.class';
-import { Observable, switchMap, take } from 'rxjs';
-import { MapPositionService } from '../../../services/map-position.service';
+import { Observable, tap } from 'rxjs';
+import { PinPopupService } from '../../../services/pin-popup.service';
+import { PinService } from '../../../services/pin.service';
+import { PopupComponent } from '../../popup/popup.component';
 
 @Component({
   selector: 'app-marker',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PopupComponent],
   templateUrl: './marker.component.html',
   styleUrl: './marker.component.scss'
 })
-export class MarkerComponent implements OnChanges {
+export class MarkerComponent implements OnInit, OnChanges {
   @Input() public pin!: OmitPinPos;
   @Input() public pos$!: Observable<V2>;
   @Input() public basePinSize!: number;
@@ -25,10 +27,20 @@ export class MarkerComponent implements OnChanges {
   @Input() public mapImg!: HTMLImageElement
   @Input() public mapPos!: V2
 
-  public clicked = false;
+  public clicked$!: Observable<boolean>;
   public pinSize = this.basePinSize * this.zoomLevel / 100
 
-  constructor(public mapPositionService: MapPositionService) {
+  private deleting = 0;
+
+  constructor(
+    private pinPopupService: PinPopupService,
+    private pinService: PinService
+  ) {
+  }
+
+  public ngOnInit(): void {
+    this.clicked$ = this.pinPopupService.getClicked(this.pin.ID)
+      .pipe(tap((selected: boolean) => selected && (this.deleting = 0)))
   }
 
   public ngOnChanges(changes: NgChanges<MarkerComponent>): void {
@@ -39,30 +51,14 @@ export class MarkerComponent implements OnChanges {
   }
 
   public onClick(): void {
-    this.pos$.pipe(
-      take(1),
-      switchMap((pos: V2): Observable<V2> => {
-        this.mapPositionService.sendUpdate({
-          zoomLevel: this.zoomLevel,
-          mapPos: this.inverseTransformPos(pos, this.mapImg, this.zoomLevel, this.mapPos)
-        })
-        return this.pos$.pipe(take(1))
-      }
-    )).subscribe((pos: V2) => setTimeout(() => {
-      this.mapPositionService.sendUpdate({
-        mapPos: this.inverseTransformPos(pos, this.mapImg, this.zoomLevel, this.mapPos).subtract(pos)
-      })
-    }, 30))
+    this.pinPopupService.setClicked(this.pin.ID);
   }
 
-  private inverseTransformPos(pos: V2, mapImg: HTMLImageElement, zoomLevel: number, mapPos: V2): V2 {
-    return (
-      pos.add(
-        new V2(1,1)
-          .multiply(this.basePinSize * zoomLevel / 100)
-          .hadamardDivision(new V2(2, 1.1))
-          .subtract(mapPos)
-      ).hadamardDivision(new V2(mapImg))
-    )
+  public onDeleteButton(): void {
+    if (++this.deleting >= 3) this.pinService.deleteById(this.pin.ID).subscribe()
+  }
+
+  public onClosePopup(): void {
+    this.pinPopupService.unset()
   }
 }

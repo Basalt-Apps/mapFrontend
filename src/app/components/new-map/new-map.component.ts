@@ -4,9 +4,9 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {FileUploadComponent} from "../file-upload/file-upload.component";
 import {ControlsOf} from "../../models/controls-of.type";
 import {MapCreateDto} from "../../models/create-map.dto";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {MapService} from "../../services/map.service";
-import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 
 
@@ -36,13 +36,14 @@ export class NewMapComponent implements OnInit {
       name: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
       url: new FormControl<string>('', { nonNullable: true, validators: [
         Validators.required,
-        Validators.pattern(/https?:\/\/.*?\/api\/images\/.*/)]
+        Validators.pattern(/.*\.png/)]
       })
     })
   }
 
   public uploadReturn(urlObservable: Observable<string>): void {
     urlObservable.pipe().subscribe((url: string) => {
+      console.log(url)
       this.form.controls.url.setValue(url);
     })
   }

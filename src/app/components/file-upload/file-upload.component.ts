@@ -23,8 +23,6 @@ export class FileUploadComponent {
   public onFileSelected(event: any): void {
     if (!this.uploadUrl) return;
 
-    console.log(event)
-
     const file: File | null = event.target.files[0];
 
     if (file) {
@@ -37,8 +35,8 @@ export class FileUploadComponent {
       const upload$ = this.http.post<{ url: string }>('/' + this.uploadUrl, formData);
 
       this.returnObservable.emit(upload$.pipe(
-        map((url: {url: string}): string => environment.backendUrl + '/api/images/' + url.url),
-        tap((url: string): void => this.image$.next(url))
+        map((url: {url: string}): string => url.url),
+        tap((url: string): void => this.image$.next(environment.backendUrl + '/api/images/' + url))
       ))
     }
   }

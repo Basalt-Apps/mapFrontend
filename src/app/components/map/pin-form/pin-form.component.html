@@ -1,0 +1,13 @@
+<div class="main">
+  <app-popup
+    [style.left]="((clicked$ | async)?.positionTransformed?.x ?? 0) - 250+ 'px'"
+    [style.top]="((clicked$ | async)?.positionTransformed?.y ?? 0) - 202 + 'px'"
+    [width]="500"
+  >
+    <h1>Create new Marker</h1>
+    <form [formGroup]="form">
+      <input formControlName="name" placeholder="Name" (keyup.enter)="onSubmit()"/>
+      <textarea formControlName="content" placeholder="Content" (keyup.control.enter)="onSubmit()"></textarea>
+    </form>
+  </app-popup>
+</div>

@@ -1,0 +1,56 @@
+.main {
+  app-popup {
+    display: flex;
+
+    position: absolute;
+
+    h1 {
+      margin: 0;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+
+      font-family: Arial, sans-serif;
+
+      input {
+        width: 449px;
+        font-family: inherit;
+        height: 25px;
+        font-size: 15px;
+        padding-left: 5px;
+        border-radius: 8px 8px 0 0;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        background-color: rgba(50, 50, 50, 1);
+        color: white;
+
+        &:focus-visible {
+          outline: none;
+        }
+      }
+
+      textarea {
+        min-width: 449px;
+        max-width: 449px;
+        min-height: 80px;
+        max-height: 80px;
+        margin-top: 0;
+        font-family: inherit;
+        padding-left: 5px;
+        resize: none;
+        border-radius: 0 0 8px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        border-left: 1px solid rgba(255, 255, 255, 0.5);
+        border-right: 1px solid rgba(255, 255, 255, 0.5);
+        border-top: none;
+        background-color: rgba(50, 50, 50, 1);
+        color: white;
+
+        &:focus-visible {
+          outline: none;
+        }
+      }
+    }
+  }
+}
