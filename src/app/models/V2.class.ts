@@ -35,4 +35,12 @@ export class V2 {
   public hadamardDivision(other: V2): V2 {
     return new V2(this.x / other.x, this.y / other.y);
   }
+
+  public min(min: V2): V2 {
+    return new V2(Math.min(this.x, min.x), Math.min(this.y, min.y))
+  }
+
+  public max(max: V2): V2 {
+    return new V2(Math.max(this.x, max.x), Math.max(this.y, max.y))
+  }
 }

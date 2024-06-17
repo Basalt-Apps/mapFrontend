@@ -20,6 +20,10 @@ export class PinService {
     return this.http.post<void>('/api/pins/', body)
   }
 
+  public deleteById(id: number): Observable<void> {
+    return this.http.delete<void>('/api/pins/' + id)
+  }
+
   private convertV2(pins: PinModel[]): PinModel[] {
     return pins.map((pin: PinModel): PinModel => ({
       Name: pin.Name,

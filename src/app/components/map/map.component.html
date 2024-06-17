@@ -1,4 +1,4 @@
-<ng-container *ngIf="(map$ | async) as map; else noMap">
+<ng-container *ngIf="(map$ | async) as map">
     <img [src]="environment.backendUrl + '/api/images/' + map.ImageURL"
          alt=""
          id="mapImg"
@@ -11,15 +11,19 @@
     <ng-container *ngIf="(pins$ | async) as pins">
         <ng-container *ngIf="pins.length > 0">
             <app-marker
-                    *ngFor="let pin of pins; let i = index"
-                    [pin]="pin"
-                    [basePinSize]="basePinSize"
-                    [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
-                    [pos$]="(pinPositions$ | async)?.[i] ?? of()"
+                  *ngFor="let pin of pins; let i = index"
+                  [pin]="pin"
+                  [basePinSize]="basePinSize"
+                  [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
+                  [pos$]="(pinPositions$ | async)?.[i] ?? of()"
             />
         </ng-container>
     </ng-container>
+  <ng-container *ngIf="(clicked$ | async)">
+    <app-pin-form
+      (finished)="onFormFinish()"
+      [map$]="map$"
+      [clicked$]="clicked$"
+    />
+  </ng-container>
 </ng-container>
-<ng-template #noMap>
-
-</ng-template>

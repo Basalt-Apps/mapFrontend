@@ -1,24 +1,20 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {
-  BehaviorSubject,
-  combineLatestWith,
-  filter,
-  map,
-  Observable, of,
-  switchMap
-} from "rxjs";
+import {BehaviorSubject, combineLatestWith, filter, map, Observable, of, switchMap, take} from "rxjs";
 import {ActivatedRoute, Params} from "@angular/router";
 import {MapModel} from "../../models/map.model";
 import {MapDataService} from "../../services/map-data.service";
 import {V2} from "../../models/V2.class";
 import {PinDataService} from "../../services/pin-data.service";
 import {PinService} from "../../services/pin.service";
-import { PinModel } from '../../models/pin.model';
-import { MarkerComponent } from './marker/marker.component';
-import { RealInitDirective } from '../../directives/real-init.directive';
-import { environment } from '../../../environments/environment';
-import { OmitPinPos } from '../../models/omit-pin-pos.type';
+import {PinModel} from '../../models/pin.model';
+import {MarkerComponent} from './marker/marker.component';
+import {RealInitDirective} from '../../directives/real-init.directive';
+import {environment} from '../../../environments/environment';
+import {OmitPinPos} from '../../models/omit-pin-pos.type';
+import {PinPopupService} from "../../services/pin-popup.service";
+import {PinFormComponent} from "./pin-form/pin-form.component";
+import {PinCreateComponentMetadata} from "../../models/pin-create-component-metadata.interface";
 
 @Component({
   selector: 'app-map',
@@ -26,7 +22,8 @@ import { OmitPinPos } from '../../models/omit-pin-pos.type';
   imports: [
     CommonModule,
     RealInitDirective,
-    MarkerComponent
+    MarkerComponent,
+    PinFormComponent
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
@@ -41,13 +38,15 @@ export class MapComponent implements OnInit {
   public map$!: Observable<MapModel | null>
   public pins$!: Observable<OmitPinPos[]>
   public pinPositions$!: Observable<Observable<V2>[]>
+  public clicked$ = new BehaviorSubject<PinCreateComponentMetadata | null>(null);
 
   constructor(
     private route: ActivatedRoute,
     private dataService: MapDataService,
     private pinDataService: PinDataService,
     private pinService: PinService,
-    private elRef: ElementRef
+    private elRef: ElementRef,
+    private pinPopupService: PinPopupService
   ) {
   }
 
@@ -92,7 +91,7 @@ export class MapComponent implements OnInit {
 
     mapImg.addEventListener('mousemove', (event: MouseEvent) => {
       if (!mouseDown) return;
-      moved = true;
+      if (!moved) moved = true;
       const layerPos = new V2(event.clientX, event.clientY);
       const movement = layerPos.subtract(initialMousePos)
 
@@ -119,29 +118,28 @@ export class MapComponent implements OnInit {
   }
 
   private handleClick(mapImg: HTMLImageElement, event: MouseEvent): void {
-    const mapSize = new V2(mapImg.offsetWidth, mapImg.offsetHeight);
-    const layer = new V2(event.layerX, event.layerY);
+    this.pinPopupService.getIfSet().pipe(take(1),
+      map((set: boolean): boolean | void => this.clicked$.value !== null ? void this.clicked$.next(null) : set),
+      filter((set: boolean | void): set is boolean => set !== void 0),
+      switchMap((set: boolean): Observable<true | null | void> => of(set ? void this.pinPopupService.unset() : true)),
+      filter((map: true | null | void): boolean => !!map),
+    ).subscribe(() => {
+      const mapSize = new V2(mapImg.offsetWidth, mapImg.offsetHeight);
+      const layer = new V2(event.layerX, event.layerY);
+      const client = new V2(event.clientX, event.clientY)
 
-    const mapSpacePos = layer.hadamardDivision(mapSize)
+      const mapSpacePos = layer.hadamardDivision(mapSize)
 
-    console.log('layer', layer)
-    console.log('/')
-    console.log('mapSize', mapSize)
-    console.log('=')
-    console.log('mapSpacePos', mapSpacePos)
+      // TODO: FIX TRANSFORMATION HERE
+      // TODO: you can open markers without the form closing first, fix this
 
-
-    this.map$.pipe(
-      map((map: MapModel | null): number => map?.ID ?? -1),
-      filter((id: number): boolean => id >= 0),
-      switchMap((id: number): Observable<void> => this.pinService.createNew({
-        name: 'fourth',
-        mapId: id,
-        content: 'none',
-        y: mapSpacePos.y,
-        x: mapSpacePos.x,
-      }))
-    ).subscribe()
+      this.clicked$.next({
+        position: mapSpacePos,
+        positionTransformed: client
+          .max(new V2(300, 250))
+          .min(new V2((window.visualViewport?.width ?? 1920) - 300, (window.visualViewport?.height ?? 927) - 50))
+      })
+    })
   }
 
   private placePins(mapImg: HTMLImageElement): void {
@@ -151,15 +149,15 @@ export class MapComponent implements OnInit {
       filter(([id, pins]: [number, PinModel[]]): boolean =>
         id >= 0 && pins.length > 0),
       map(([id, pins]: [number, PinModel[]]): OmitPinPos[] => pins
-          .filter((pin: PinModel) => pin.MapID === id)
-          .map((pin: PinModel) => {
-            return {
-              MapID: pin.MapID,
-              ID: pin.ID,
-              Name: pin.Name,
-              Content: pin.Content
-            }
-          })
+        .filter((pin: PinModel) => pin.MapID === id)
+        .map((pin: PinModel) => {
+          return {
+            MapID: pin.MapID,
+            ID: pin.ID,
+            Name: pin.Name,
+            Content: pin.Content
+          }
+        })
       )
     )
     this.pinPositions$ = this.map$.pipe(
@@ -173,7 +171,9 @@ export class MapComponent implements OnInit {
           .hadamardProduct(new V2(mapImg))
           .add(mapPos)
           .subtract(
-            new V2(1,1).multiply(this.basePinSize * (zoomLevel / this.zoomPinMod + 100 * (1 - 1/this.zoomPinMod)) / 100).hadamardDivision(new V2(2, 1.1))
+            new V2(1, 1)
+              .multiply(this.basePinSize * (zoomLevel / this.zoomPinMod + 100 * (1 - 1 / this.zoomPinMod)) / 100)
+              .hadamardDivision(new V2(2, 1.1))
           )
         ))
       )
@@ -182,4 +182,8 @@ export class MapComponent implements OnInit {
 
   protected readonly environment = environment;
   protected readonly of = of;
+
+  public onFormFinish(): void {
+    this.clicked$.next(null);
+  }
 }

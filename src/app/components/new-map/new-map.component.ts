@@ -36,13 +36,14 @@ export class NewMapComponent implements OnInit {
       name: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
       url: new FormControl<string>('', { nonNullable: true, validators: [
         Validators.required,
-        Validators.pattern(/https?:\/\/.*?\/api\/images\/.*/)]
+        Validators.pattern(/.*\.png/)]
       })
     })
   }
 
   public uploadReturn(urlObservable: Observable<string>): void {
     urlObservable.pipe().subscribe((url: string) => {
+      console.log(url)
       this.form.controls.url.setValue(url);
     })
   }
