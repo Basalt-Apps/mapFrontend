@@ -4,7 +4,7 @@ import {ControlsOf} from "../../../models/controls-of.type";
 import {PinCreateForm} from "../../../models/pin-create-form.interface";
 import {V2} from "../../../models/V2.class";
 import {PinCreateDto} from "../../../models/pin-create.dto";
-import {combineLatestWith, filter, map, Observable, of, switchMap, take, throwError} from "rxjs";
+import {combineLatestWith, filter, map, Observable, switchMap, take, throwError} from "rxjs";
 import {MapModel} from "../../../models/map.model";
 import {PinService} from "../../../services/pin.service";
 import {PinCreateComponentMetadata} from "../../../models/pin-create-component-metadata.interface";
