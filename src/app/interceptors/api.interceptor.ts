@@ -1,7 +1,6 @@
 import { HttpEvent, HttpInterceptorFn } from '@angular/common/http';
 import {environment} from "../../environments/environment";
 import { inject } from '@angular/core';
-import { AuthService } from '../auth/services/auth.service';
 import { Observable, switchMap } from 'rxjs';
 import { TokenService } from '../auth/services/token.service';
 

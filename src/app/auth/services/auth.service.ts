@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
 import { LoginDTO } from '../models/login.dto';
 import { TokenPayload } from '../models/token-payload.interface';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, combineLatest, map, Observable, tap} from "rxjs";
+import {BehaviorSubject, combineLatest, map, Observable} from "rxjs";
 import {MapService} from "./map.service";
 import {SignalService} from "./signal.service";
 import {MapModel} from "../models/map.model";

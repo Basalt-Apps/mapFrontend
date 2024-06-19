@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import { map, Observable } from "rxjs";
 import {MapModel} from "../../models/map.model";
-import {MapService} from "../../services/map.service";
 import {MapDataService} from "../../services/map-data.service";
 import {MapListItemComponent} from "./map-list-item/map-list-item.component";
 import {RouterLink} from "@angular/router";
