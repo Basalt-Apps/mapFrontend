@@ -1,8 +1,21 @@
-<div class="main" [style.border-radius]="last ? '0 0 4px 4px' : '0'">
-  <img class="thumbnail" [src]="environment.backendUrl + '/api/images/' + map.ImageURL" alt="No Image Found"/>
-  <div class="content">
-    {{map.Name}}
-  </div>
-  <img class="rename" alt="" src="pencil.svg"/>
-</div>
-
+<ng-container *ngIf="settingsMode; then settings; else main"/>
+<ng-template #main>
+    <div class="main default" [style.border-radius]="last ? '0 0 4px 4px' : '0'"
+         [routerLink]="['/', 'map', map.ID]"
+    >
+        <img class="thumbnail" [src]="environment.backendUrl + '/api/images/' + map.ImageURL" alt="No Image Found"/>
+        <div class="content">
+            {{map.Name}}
+        </div>
+    </div>
+</ng-template>
+<ng-template #settings>
+    <div class="main settings" [style.border-radius]="last ? '0 0 4px 4px' : '0'">
+        <img class="thumbnail" [src]="environment.backendUrl + '/api/images/' + map.ImageURL" alt="No Image Found"/>
+        <div class="content">
+            {{map.Name}}
+        </div>
+        <img class="action-icon" alt="" src="delete.svg"/>
+        <img class="action-icon" alt="" src="pencil.svg"/>
+    </div>
+</ng-template>

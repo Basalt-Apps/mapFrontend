@@ -6,7 +6,14 @@
       *ngFor="let map of maps; let last = last"
       [map]="map"
       [last]="last"
-      [routerLink]="['/', 'map', map.ID]"
+      [settingsMode]="settingsMode"
     ></app-map-list-item>
   </div>
 </ng-container>
+
+<div class="account">
+    <div class="username">{{username$ | async}}{{(admin$|async) ? '*' : ''}}</div>
+    <img src="logout.svg" alt="log out" class="logout" (click)="onLogout()">
+</div>
+
+<img [src]="(settingsMode ? 'cog-outline' : 'cog') + '.svg'" alt="" class="settings" (click)="toggleSettingsMode()">

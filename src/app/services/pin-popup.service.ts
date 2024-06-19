@@ -5,7 +5,7 @@ import {BehaviorSubject, map, Observable} from "rxjs";
   providedIn: 'root'
 })
 export class PinPopupService {
-  private clicked$ = new BehaviorSubject<number>(459);
+  private clicked$ = new BehaviorSubject<number>(-1);
 
   public unset(): void {
     this.clicked$.next(-1);

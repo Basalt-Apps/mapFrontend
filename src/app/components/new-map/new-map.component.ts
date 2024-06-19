@@ -43,7 +43,6 @@ export class NewMapComponent implements OnInit {
 
   public uploadReturn(urlObservable: Observable<string>): void {
     urlObservable.pipe().subscribe((url: string) => {
-      console.log(url)
       this.form.controls.url.setValue(url);
     })
   }

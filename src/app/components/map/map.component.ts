@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {BehaviorSubject, combineLatestWith, filter, map, Observable, of, switchMap, take} from "rxjs";
-import {ActivatedRoute, Params} from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import {MapModel} from "../../models/map.model";
 import {MapDataService} from "../../services/map-data.service";
 import {V2} from "../../models/V2.class";
@@ -46,7 +46,8 @@ export class MapComponent implements OnInit {
     private dataService: MapDataService,
     private pinDataService: PinDataService,
     private elRef: ElementRef,
-    private pinPopupService: PinPopupService
+    private pinPopupService: PinPopupService,
+    private router: Router
   ) {
   }
 
@@ -188,7 +189,10 @@ export class MapComponent implements OnInit {
     this.clicked$.next(null);
   }
 
+  public onBack(): void {
+    void this.router.navigate(['/'])
+  }
+
   protected readonly environment = environment;
   protected readonly of = of;
-
 }

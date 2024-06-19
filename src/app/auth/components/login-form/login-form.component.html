@@ -1,0 +1,18 @@
+<div class="main">
+    <h1>Login</h1>
+    <form [formGroup]="form">
+        <input formControlName="username"
+               placeholder="Username"
+               type="text"
+               (keyup.enter)="onSubmit()"
+               (keyup.control.enter)="onSubmit()"
+        />
+        <input formControlName="password"
+               placeholder="Password"
+               type="password"
+               (keyup.enter)="onSubmit()"
+               (keyup.control.enter)="onSubmit()"
+        />
+    </form>
+    <button (keyup.enter)="onSubmit()" (click)="onSubmit()">Submit</button>
+</div>

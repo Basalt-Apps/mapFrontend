@@ -3,6 +3,8 @@ import {BehaviorSubject, combineLatest, map, Observable, tap} from "rxjs";
 import {MapService} from "./map.service";
 import {SignalService} from "./signal.service";
 import {MapModel} from "../models/map.model";
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { AuthService } from '../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,11 @@ export class MapDataService {
 
   private ids$ = new BehaviorSubject<number[]>([]);
 
-  constructor(private mapService: MapService, private signalService: SignalService) {
+  constructor(
+    private mapService: MapService,
+    private signalService: SignalService,
+    private authService: AuthService
+  ) {
     this.load()
     this.signalService.getSocket()?.on('map', () => this.load())
   }
@@ -37,16 +43,23 @@ export class MapDataService {
   private load() {
     this.mapService
       .getAll()
-      .subscribe((maps: MapModel[]) => {
-        const ids = [];
-        const mapMap = new Map<number, MapModel>();
+      .subscribe({
+        next: (maps: MapModel[]) => {
+          const ids = [];
+          const mapMap = new Map<number, MapModel>();
 
-        for (const map of maps) {
-          ids.push(map.ID);
-          mapMap.set(map.ID, map);
+          for (const map of maps) {
+            ids.push(map.ID);
+            mapMap.set(map.ID, map);
+          }
+
+          this.update(ids, mapMap)
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === HttpStatusCode.Unauthorized) {
+            this.authService.logout()
+          }
         }
-
-        this.update(ids, mapMap)
       })
   }
 
