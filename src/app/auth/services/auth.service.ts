@@ -14,7 +14,6 @@ import { TokenPayload } from '../models/token-payload.interface';
 import { Router } from '@angular/router';
 import { AuthHttpService } from './auth-http.service';
 import { TokenService } from './token.service';
-import { Token } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
