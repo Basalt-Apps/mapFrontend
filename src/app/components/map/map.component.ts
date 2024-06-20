@@ -16,6 +16,7 @@ import { PinPopupService } from '../../services/pin-popup.service';
 import {
   PinCreateComponentMetadata
 } from '../../models/pin-create-component-metadata.interface';
+import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
 
 @Component({
   selector: 'app-map',
@@ -24,7 +25,8 @@ import {
     CommonModule,
     RealInitDirective,
     MarkerComponent,
-    PinFormComponent
+    PinFormComponent,
+    SettingsMenuComponent
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
@@ -40,6 +42,7 @@ export class MapComponent implements OnInit {
   public pins$!: Observable<OmitPinPos[]>
   public pinPositions$!: Observable<Observable<V2>[]>
   public clicked$ = new BehaviorSubject<PinCreateComponentMetadata | null>(null);
+  public settingsMenu = true;
 
   constructor(
     private route: ActivatedRoute,

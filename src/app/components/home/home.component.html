@@ -17,3 +17,7 @@
 </div>
 
 <img [src]="(settingsMode ? 'cog-outline' : 'cog') + '.svg'" alt="" class="settings" (click)="toggleSettingsMode()">
+
+<div class="help">
+    <img src="account-question.svg" alt="help" [routerLink]="['/', 'help']">
+</div>

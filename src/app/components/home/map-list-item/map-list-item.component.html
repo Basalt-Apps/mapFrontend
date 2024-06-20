@@ -15,7 +15,7 @@
         <div class="content">
             {{map.Name}}
         </div>
-        <img class="action-icon" alt="" src="delete.svg"/>
-        <img class="action-icon" alt="" src="pencil.svg"/>
+        <img class="action-icon" alt="" src="delete.svg" *ngIf="map.owners.includes(userID$ | async) || (admin$ | async)"/>
+        <img class="action-icon" alt="" src="pencil.svg" *ngIf="map.owners.includes(userID$ | async) || (admin$ | async)"/>
     </div>
 </ng-template>

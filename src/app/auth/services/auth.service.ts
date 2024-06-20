@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, switchMap, take, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap
+} from 'rxjs';
 import { LoginDTO } from '../models/login.dto';
 import { TokenPayload } from '../models/token-payload.interface';
 import { Router } from '@angular/router';
 import { AuthHttpService } from './auth-http.service';
 import { TokenService } from './token.service';
+import { Token } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +22,7 @@ import { TokenService } from './token.service';
 export class AuthService {
   private token$ = new BehaviorSubject<string | null>(null);
   private tokenPayload$ = new BehaviorSubject<TokenPayload | null>(null);
+  private userID$: Observable<number>;
   private loggedIn = false
 
   constructor(
@@ -21,6 +31,7 @@ export class AuthService {
     private tokenService: TokenService
   ) {
     this.token$.subscribe((token: string | null) => this.tokenService.setToken(token))
+    this.userID$ = this.tokenPayload$.pipe(map((payload: TokenPayload | null) => payload?.userID ?? -1))
 
     const token = localStorage.getItem('authToken')
     if (!token) return
@@ -58,6 +69,8 @@ export class AuthService {
       void this.router.navigate(['/', 'login'])
     };
 
+    if (this.token$.value === null) handle(false);
+
     this.token$.pipe(
       take(1),
       switchMap((token: string | null): Observable<boolean> =>
@@ -84,11 +97,11 @@ export class AuthService {
     localStorage.removeItem('authToken')
   }
 
-  public getToken(): Observable<string | null> {
-    return this.token$.asObservable();
-  }
-
   public getTokenPayload(): Observable<TokenPayload | null> {
     return this.tokenPayload$.asObservable()
+  }
+
+  public getUserID(): Observable<number> {
+    return this.userID$;
   }
 }

@@ -4,6 +4,7 @@
     [style.top]="((clicked$ | async)?.positionTransformed?.y ?? 0) - 202 + 'px'"
     [width]="500"
   >
+    <button (click)="onSubmit()">Submit</button>
     <h1>Create new Marker</h1>
     <form [formGroup]="form">
       <input formControlName="name" placeholder="Name" (keyup.enter)="onSubmit()"/>

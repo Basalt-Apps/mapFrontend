@@ -1,3 +1,5 @@
+@import '../../../../theme/variables';
+
 .main {
   display: flex;
   justify-content: center;
@@ -5,7 +7,7 @@
   flex-direction: column;
 
   height: 100%;
-  font-family: Arial, sans-serif;
+  font-family: $font;
 
   form {
     width: 250px;
@@ -16,7 +18,7 @@
       height: 25px;
       margin-bottom: 20px;
       font-size: 20px;
-      font-family: Arial, sans-serif;
+      font-family: $font;
     }
   }
 
@@ -25,6 +27,6 @@
     width: 100px;
     height: 50px;
     font-size: 25px;
-    font-family: Arial, sans-serif;
+    font-family: $font;
   }
 }

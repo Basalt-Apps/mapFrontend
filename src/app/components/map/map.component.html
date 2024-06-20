@@ -30,3 +30,8 @@
 </ng-container>
 
 <img src="arrow-left.svg" alt="back" class="back" (click)="onBack()">
+<img [src]="(settingsMenu ? 'cog' : 'cog-outline') + '.svg'" alt="settings" class="settings" (click)="settingsMenu = !settingsMenu">
+
+<app-settings-menu *ngIf="settingsMenu"
+/>
+<!--                   [mapId]="(map$ | async)?.ID ?? -1"-->
