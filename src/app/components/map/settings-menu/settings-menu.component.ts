@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { UserDataService } from '../../../services/user-data.service';
-import { UserService } from '../../../services/user.service';
-import { SignalService } from '../../../services/signal.service';
 
 @Component({
   selector: 'app-settings-menu',
