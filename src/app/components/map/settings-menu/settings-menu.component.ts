@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UserService} from "../../../services/user.service";
 import {UserLinkModel} from "../../../models/user-link.model";
-import {combineLatestWith, filter, map, Observable, shareReplay, switchMap, take, tap} from "rxjs";
+import {filter, map, Observable, shareReplay, switchMap, take} from "rxjs";
 import {CommonModule} from "@angular/common";
 import {MapModel} from "../../../models/map.model";
 
