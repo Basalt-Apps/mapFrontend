@@ -30,6 +30,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.authService.logout()
     this.form = new FormGroup<ControlsOf<LoginDTO>>({
       username: new FormControl<string>('',
         { nonNullable: true, validators: Validators.required }

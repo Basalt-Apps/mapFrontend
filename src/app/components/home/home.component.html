@@ -3,8 +3,9 @@
 <ng-container *ngIf="(maps$ | async) as maps">
   <div class="list">
     <app-map-list-item
-      *ngFor="let map of maps; let last = last"
+      *ngFor="let map of maps; let last = last; let i = index"
       [map]="map"
+      (onDelete)="onDelete(i, map.ID)"
       [last]="last"
       [settingsMode]="settingsMode"
     ></app-map-list-item>

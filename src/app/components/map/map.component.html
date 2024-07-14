@@ -1,25 +1,25 @@
 <ng-container *ngIf="(map$ | async) as map">
-    <img [src]="environment.backendUrl + '/api/images/' + map.ImageURL"
-         alt=""
-         id="mapImg"
-         appRealInit
-         (init)="onMapInit()"
-         [style.left]="mapPos.x + 'px'"
-         [style.top]="mapPos.y + 'px'"
-         [style.width]="zoomLevel + '%'"
-    >
-    <ng-container *ngIf="(pins$ | async) as pins">
-        <ng-container *ngIf="pins.length > 0">
-            <app-marker
-                  *ngFor="let pin of pins; let i = index"
-                  [pin]="pin"
-                  [basePinSize]="basePinSize"
-                  [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
-                  [pos$]="(pinPositions$ | async)?.[i] ?? of()"
-                  (clicked)="onPinClicked()"
-            />
-        </ng-container>
+  <img [src]="'/api/images/' + map.ImageURL | secure | async"
+       alt=""
+       id="mapImg"
+       appRealInit
+       (init)="onMapInit()"
+       [style.left]="mapPos.x + 'px'"
+       [style.top]="mapPos.y + 'px'"
+       [style.width]="zoomLevel + '%'"
+  >
+  <ng-container *ngIf="(pins$ | async) as pins">
+    <ng-container *ngIf="pins.length > 0">
+      <app-marker
+        *ngFor="let pin of pins; let i = index"
+        [pin]="pin"
+        [basePinSize]="basePinSize"
+        [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
+        [pos$]="(pinPositions$ | async)?.[i] ?? of()"
+        (clicked)="onPinClicked()"
+      />
     </ng-container>
+  </ng-container>
   <ng-container *ngIf="(clicked$ | async)">
     <app-pin-form
       (finished)="onFormFinish()"
@@ -30,8 +30,14 @@
 </ng-container>
 
 <img src="arrow-left.svg" alt="back" class="back" (click)="onBack()">
-<img [src]="(settingsMenu ? 'cog' : 'cog-outline') + '.svg'" alt="settings" class="settings" (click)="settingsMenu = !settingsMenu">
+<img
+  [src]="(settingsMenu ? 'cog' : 'cog-outline') + '.svg'"
+  alt="settings"
+  class="settings"
+  (click)="settingsMenu = !settingsMenu"
+  *ngIf=""
+>
 
-<app-settings-menu *ngIf="settingsMenu"
+<app-settings-menu *ngIf="settingsMenu" [map$]="map$"
 />
 <!--                   [mapId]="(map$ | async)?.ID ?? -1"-->

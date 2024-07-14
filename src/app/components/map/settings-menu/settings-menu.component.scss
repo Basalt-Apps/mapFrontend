@@ -4,9 +4,45 @@ $opacity: 0.8;
   position: absolute;
   top: 60px;
   right: 12px;
-  width: 300px;
-  height: 400px;
+  width: 260px;
+  height: 360px;
   border-radius: 14px;
   background-color: rgba(100, 100, 100, $opacity);
   border: 1px solid rgba(0, 0, 0, calc($opacity / 3));
+
+  padding:20px;
+
+  .doc {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 260px;
+    height: 25px;
+
+    margin-bottom: 10px;
+
+    .checkboxes {
+      margin-right: 2.5px;
+    }
+  }
+
+  .user-element {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 260px;
+    height: 25px;
+  }
+
+  .checkboxes {
+    display: flex;
+    flex-direction: row;
+
+    * {
+      width: 14px;
+      margin: 3px 3px 3px 4px;
+    }
+  }
 }

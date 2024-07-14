@@ -1,3 +1,28 @@
 <div class="main">
-
+  <ng-container *ngIf="(userLinks$ | async) as userLinks">
+    <div class="doc">
+      <b>Username</b>
+      <div class="checkboxes">
+        <div title="Admin"><b>A</b></div>
+        <div title="User"><b>U</b></div>
+      </div>
+    </div>
+    <div class="user-element"
+         *ngFor="let link of userLinks.links; let i = index">
+      {{link.Username}}
+      <div class="checkboxes">
+        <input type="checkbox"
+               [name]="'thing'+i"
+               [checked]="link.Admin"
+               (change)="adminCheckbox(i, $event)"
+               [disabled]="checkPending"
+        >
+        <input type="checkbox"
+               [name]="'thing'+i"
+               [checked]="link.Selected"
+               (change)="userCheckbox(i, $event)"
+               [disabled]="checkPending"
+        ></div>
+    </div>
+  </ng-container>
 </div>

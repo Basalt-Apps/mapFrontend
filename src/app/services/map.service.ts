@@ -18,4 +18,8 @@ export class MapService {
   public create(body: MapCreateDto): Observable<void> {
     return this.http.post<void>('/api/maps', body)
   }
+
+  public delete(id: number): Observable<void> {
+    return this.http.delete<void>('/api/maps/' + id)
+  }
 }

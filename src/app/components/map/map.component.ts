@@ -17,6 +17,7 @@ import {
   PinCreateComponentMetadata
 } from '../../models/pin-create-component-metadata.interface';
 import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
+import {SecurePipe} from "../../pipes/secure.pipe";
 
 @Component({
   selector: 'app-map',
@@ -26,7 +27,8 @@ import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
     RealInitDirective,
     MarkerComponent,
     PinFormComponent,
-    SettingsMenuComponent
+    SettingsMenuComponent,
+    SecurePipe
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
@@ -42,6 +44,7 @@ export class MapComponent implements OnInit {
   public pins$!: Observable<OmitPinPos[]>
   public pinPositions$!: Observable<Observable<V2>[]>
   public clicked$ = new BehaviorSubject<PinCreateComponentMetadata | null>(null);
+  public admin$!: Observable<boolean>;
   public settingsMenu = true;
 
   constructor(

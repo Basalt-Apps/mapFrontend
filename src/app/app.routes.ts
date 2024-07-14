@@ -7,7 +7,6 @@ import {
 } from './auth/components/login-form/login-form.component';
 import { authGuard } from './guards/auth.guard';
 import { HelpComponent } from './components/help/help.component';
-import { loginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
   {
@@ -33,7 +32,6 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginFormComponent,
-    canActivate: [loginGuard]
   },
   {
     path: '**',

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { UserModel } from '../models/user.model';
-import { UserLinkModel } from '../models/user-link.model';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {UserModel} from '../models/user.model';
+import {UserLinkModel} from '../models/user-link.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +17,17 @@ export class UserService {
 
   public getUserLinksByMap(mapId: number): Observable<UserLinkModel> {
     return this.http.get<UserLinkModel>('/api/users/links/' + mapId)
+  }
+
+  public setUserLink(mapId: number, userId: number, status: boolean): Observable<void> {
+    return this[status ? 'addUserLink' : 'removeUserLink'](mapId, userId);
+  }
+
+  private addUserLink(mapId: number, userId: number): Observable<void> {
+    return this.http.post<void>('/api/users/links/add', { mapId, userId })
+  }
+
+  private removeUserLink(mapId: number, userId: number): Observable<void> {
+    return this.http.post<void>('/api/users/links/remove', { mapId, userId })
   }
 }
