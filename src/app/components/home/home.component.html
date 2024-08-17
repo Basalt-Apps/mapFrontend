@@ -1,4 +1,12 @@
-<div class="new" [routerLink]="['/', 'map', 'new']">New Map</div>
+<div
+  class="new"
+  [routerLink]="['/', 'map', 'new']"
+  *ngIf="mapUploader$ | async"
+>New Map
+</div>
+<div class="new-map-else"
+     *ngIf="!(mapUploader$ | async)"
+></div>
 
 <ng-container *ngIf="(maps$ | async) as maps">
   <div class="list">
@@ -8,17 +16,18 @@
       (onDelete)="onDelete(i, map.ID)"
       [last]="last"
       [settingsMode]="settingsMode"
+      [admin$]="admin$"
     ></app-map-list-item>
   </div>
 </ng-container>
 
 <div class="account">
-    <div class="username">{{username$ | async}}{{(admin$|async) ? '*' : ''}}</div>
-    <img src="logout.svg" alt="log out" class="logout" (click)="onLogout()">
+  <div class="username">{{ username$ | async }}{{ (admin$|async) ? '*' : '' }}</div>
+  <img src="logout.svg" alt="log out" class="logout" (click)="onLogout()">
 </div>
 
 <img [src]="(settingsMode ? 'cog-outline' : 'cog') + '.svg'" alt="" class="settings" (click)="toggleSettingsMode()">
 
 <div class="help">
-    <img src="account-question.svg" alt="help" [routerLink]="['/', 'help']">
+  <img src="account-question.svg" alt="help" [routerLink]="['/', 'help']">
 </div>

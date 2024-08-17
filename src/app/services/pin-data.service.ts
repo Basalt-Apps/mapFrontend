@@ -3,6 +3,7 @@ import {SignalService} from "./signal.service";
 import {Injectable} from '@angular/core';
 import {PinModel} from "../models/pin.model";
 import {PinService} from "./pin.service";
+import {MapModel} from "../models/map.model";
 
 @Injectable({
   providedIn: 'root'
@@ -53,5 +54,10 @@ export class PinDataService {
   private update(ids: number[], pinMap: Map<number, PinModel>) {
     this.ids$.next(ids);
     this.pins$.next(pinMap)
+  }
+
+  public clear(): void {
+    this.ids$.next([]);
+    this.pins$.next(new Map<number, PinModel>())
   }
 }

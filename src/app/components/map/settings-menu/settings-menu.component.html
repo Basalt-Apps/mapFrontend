@@ -15,7 +15,7 @@
                [name]="'thing'+i"
                [checked]="link.Admin"
                (change)="adminCheckbox(i, $event)"
-               [disabled]="checkPending"
+               [disabled]="checkPending || !link.Selected"
         >
         <input type="checkbox"
                [name]="'thing'+i"

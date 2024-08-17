@@ -1,0 +1,7 @@
+<div class="main">
+  <div class="popup" [style.opacity]="opacity">
+    <ng-container *ngIf="(elements$|async) as elements">
+      <div class="element" *ngFor="let element of elements">{{element}}</div>
+    </ng-container>
+  </div>
+</div>

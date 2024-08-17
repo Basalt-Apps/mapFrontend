@@ -1,0 +1,14 @@
+<div class="main">
+  <app-popup
+    [style.left]="((pos$ | async)?.x ?? 0) - 250 + 'px'"
+    [style.top]="((pos$ | async)?.y ?? 0) - 202 + 'px'"
+    [width]="500"
+  >
+    <button (click)="onSubmit()">Submit</button>
+    <h1>Edit Marker</h1>
+    <form [formGroup]="form">
+      <input (keyup.enter)="onSubmit()" formControlName="name" placeholder="Name"/>
+      <textarea (keyup.control.enter)="onSubmit()" formControlName="content" placeholder="Content"></textarea>
+    </form>
+  </app-popup>
+</div>

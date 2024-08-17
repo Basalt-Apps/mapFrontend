@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
-import { UserModel } from '../models/user.model';
-import { UserService } from './user.service';
-import { SignalService } from './signal.service';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, combineLatest, map, Observable} from 'rxjs';
+import {UserModel} from '../models/user.model';
+import {UserService} from './user.service';
+import {SignalService} from './signal.service';
+import {MapModel} from "../models/map.model";
 
 @Injectable({
   providedIn: 'root'
@@ -53,5 +54,10 @@ export class UserDataService {
   private update(ids: number[], userMap: Map<number, UserModel>) {
     this.ids$.next(ids);
     this.users$.next(userMap)
+  }
+
+  public clear(): void {
+    this.ids$.next([]);
+    this.users$.next(new Map<number, UserModel>())
   }
 }

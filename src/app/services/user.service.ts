@@ -30,4 +30,16 @@ export class UserService {
   private removeUserLink(mapId: number, userId: number): Observable<void> {
     return this.http.post<void>('/api/users/links/remove', { mapId, userId })
   }
+
+  public setUserLinkAdmin(mapId: number, userId: number, status: boolean): Observable<void> {
+    return this[status ? 'addUserLinkAdmin' : 'removeUserLinkAdmin'](mapId, userId);
+  }
+
+  private addUserLinkAdmin(mapId: number, userId: number): Observable<void> {
+    return this.http.post<void>('/api/users/links/addAdmin', { mapId, userId })
+  }
+
+  private removeUserLinkAdmin(mapId: number, userId: number): Observable<void> {
+    return this.http.post<void>('/api/users/links/removeAdmin', { mapId, userId })
+  }
 }

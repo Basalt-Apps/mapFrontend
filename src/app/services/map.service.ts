@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {MapModel} from "../models/map.model";
@@ -9,7 +9,8 @@ import {MapCreateDto} from "../models/create-map.dto";
 })
 export class MapService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   public getAll(): Observable<MapModel[]> {
     return this.http.get<MapModel[]>('/api/maps')

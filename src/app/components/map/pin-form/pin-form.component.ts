@@ -10,6 +10,8 @@ import {PinService} from "../../../services/pin.service";
 import {PinCreateComponentMetadata} from "../../../models/pin-create-component-metadata.interface";
 import {PopupComponent} from "../../popup/popup.component";
 import {AsyncPipe} from "@angular/common";
+import {HttpErrorResponse} from "@angular/common/http";
+import {ErrorService} from "../../../services/error.service";
 
 @Component({
   selector: 'app-pin-form',
@@ -30,7 +32,10 @@ export class PinFormComponent implements OnInit {
 
   public form!: FormGroup<ControlsOf<PinCreateForm>>
 
-  constructor(private pinService: PinService) {
+  constructor(
+    private pinService: PinService,
+    private errorService: ErrorService
+  ) {
   }
 
   public ngOnInit(): void {
@@ -42,23 +47,21 @@ export class PinFormComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    this.form.disable()
     this.clicked$.pipe(
       take(1),
       combineLatestWith(this.map$),
       take(1),
       filter((data: [PinCreateComponentMetadata | null, MapModel | null]):
-        data is [PinCreateComponentMetadata, MapModel] => !!data[0] && !!data[1]),
+      data is [PinCreateComponentMetadata, MapModel] => !!data[0] && !!data[1]),
       map(([data, map]: [PinCreateComponentMetadata, MapModel]): [V2, number] => [data.position, map.ID]),
       switchMap(([pos, id]: [V2, number]): Observable<void> => {
         this.form.controls.pos.setValue(pos);
 
-        if (this.form.invalid) return throwError(() => new Error('invalid :('));
-
         const value = this.form.getRawValue()
-        if (value.pos === null) return throwError(() => new Error('position not set :('));
-
-
+        this.form.disable()
+        if (value.pos === null) return throwError(() => new HttpErrorResponse({
+          error: 'Position not set.', status: 500
+        }));
 
         const pin: PinCreateDto = {
           name: value.name,
@@ -72,11 +75,10 @@ export class PinFormComponent implements OnInit {
       })
     ).subscribe({
       next: () => this.finished.emit(),
-      error: () => this.form.enable()
+      error: (error: HttpErrorResponse) => {
+        this.form.enable();
+        this.errorService.setErrorHttp(error)
+      }
     })
-
-
   }
-
-
 }

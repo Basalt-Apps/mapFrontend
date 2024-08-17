@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, combineLatest, map, Observable} from "rxjs";
 import {MapService} from "./map.service";
 import {SignalService} from "./signal.service";
 import {MapModel} from "../models/map.model";
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { AuthService } from '../auth/services/auth.service';
+import {HttpErrorResponse, HttpStatusCode} from '@angular/common/http';
+import {AuthService} from '../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -63,8 +63,13 @@ export class MapDataService {
       })
   }
 
-  private update(ids: number[], mapMap: Map<number, MapModel>) {
+  private update(ids: number[], mapMap: Map<number, MapModel>): void {
     this.ids$.next(ids);
     this.maps$.next(mapMap)
+  }
+
+  public clear(): void {
+    this.ids$.next([]);
+    this.maps$.next(new Map<number, MapModel>())
   }
 }

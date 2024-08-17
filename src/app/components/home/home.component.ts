@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule} from "@angular/common";
-import { map, Observable } from "rxjs";
+import {map, Observable, tap} from "rxjs";
 import {MapModel} from "../../models/map.model";
 import {MapDataService} from "../../services/map-data.service";
 import {MapListItemComponent} from "./map-list-item/map-list-item.component";
 import {RouterLink} from "@angular/router";
-import { AuthService } from '../../auth/services/auth.service';
-import { TokenPayload } from '../../auth/models/token-payload.interface';
+import {AuthService} from '../../auth/services/auth.service';
+import {TokenPayload} from '../../auth/models/token-payload.interface';
 import {MapService} from "../../services/map.service";
 
 @Component({
@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
   public maps$!: Observable<MapModel[]>;
   public username$!: Observable<string>
   public admin$!: Observable<boolean>
+  public mapUploader$!: Observable<boolean>
   public settingsMode = false;
   private delete: [number, number] = [-1, 0]
 
@@ -41,6 +42,13 @@ export class HomeComponent implements OnInit {
     this.username$ = payload.pipe(map(
       (payload: TokenPayload | null) => payload?.username ?? ''
     ))
+    this.admin$ = payload.pipe(map(
+      (payload: TokenPayload | null) => payload?.admin ?? false
+    ))
+    this.mapUploader$ = payload.pipe(map(
+      (payload: TokenPayload | null) => payload?.mapUploader ?? false
+    ))
+
   }
 
   public onLogout(): void {
@@ -65,6 +73,4 @@ export class HomeComponent implements OnInit {
   private onActualDelete(id: number): void {
     this.mapService.delete(id).subscribe()
   }
-
-
 }

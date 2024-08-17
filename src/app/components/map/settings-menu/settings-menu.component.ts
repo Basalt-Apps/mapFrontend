@@ -1,9 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UserService} from "../../../services/user.service";
 import {UserLinkModel} from "../../../models/user-link.model";
-import {filter, map, Observable, shareReplay, switchMap, take} from "rxjs";
+import {filter, map, Observable, shareReplay, switchMap, take, tap, throwError} from "rxjs";
 import {CommonModule} from "@angular/common";
 import {MapModel} from "../../../models/map.model";
+import {HttpErrorResponse} from "@angular/common/http";
+import {ErrorService} from "../../../services/error.service";
 
 @Component({
   selector: 'app-settings-menu',
@@ -19,6 +21,7 @@ export class SettingsMenuComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private errorService: ErrorService
   ) {
   }
 
@@ -52,12 +55,39 @@ export class SettingsMenuComponent implements OnInit {
       next: () => {
         event.target.checked = checked
         this.checkPending = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.checkPending = false;
+        this.errorService.setErrorHttp(error)
       }
     })
   }
 
   public adminCheckbox(i: number, event: any): void {
-    console.log('admin', i, event.target.checked)
-
+    if (this.checkPending) return;
+    this.checkPending = true;
+    const checked = event.target.checked
+    event.target.checked = !checked;
+    this.userLinks$.pipe(
+      take(1),
+      map((userLinks: UserLinkModel): [number, number, boolean] =>
+        [userLinks.links[i].UserID, userLinks.mapID, userLinks.links[i].Selected]
+      ),
+      filter(([, , predicate]: [number, number, boolean]) =>
+        predicate ? true : (this.checkPending = false)
+      ),
+      switchMap(([userId, mapId]: [number, number, boolean]) =>
+        this.userService.setUserLinkAdmin(mapId, userId, checked)
+      )
+    ).subscribe({
+      next: () => {
+        event.target.checked = checked
+        this.checkPending = false;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.checkPending = false;
+        this.errorService.setErrorHttp(error)
+      }
+    })
   }
 }

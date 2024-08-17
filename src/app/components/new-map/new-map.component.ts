@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
 import {MapService} from "../../services/map.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
-
+import {ErrorService} from "../../services/error.service";
 
 
 @Component({
@@ -27,16 +27,18 @@ export class NewMapComponent implements OnInit {
 
   constructor(
     private mapService: MapService,
-    private router: Router
+    private router: Router,
+    private errorService: ErrorService
   ) {
   }
 
   public ngOnInit(): void {
     this.form = new FormGroup<ControlsOf<MapCreateDto>>({
-      name: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
-      url: new FormControl<string>('', { nonNullable: true, validators: [
-        Validators.required,
-        Validators.pattern(/.*\.png/)]
+      name: new FormControl<string>('', {nonNullable: true, validators: Validators.required}),
+      url: new FormControl<string>('', {
+        nonNullable: true, validators: [
+          Validators.required,
+          Validators.pattern(/.*\.png/)]
       })
     })
   }
@@ -59,7 +61,9 @@ export class NewMapComponent implements OnInit {
       next: () => void this.router.navigate(['/']),
       error: (error: HttpErrorResponse) => {
         this.form.enable()
-        console.error(error)
+        this.errorService.setErrorHttp(error);
+        console.log(error)
+        if (error.error.statusCode === 401) void this.router.navigate(['/'])
       }
     });
   }

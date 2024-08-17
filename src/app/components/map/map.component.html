@@ -13,6 +13,7 @@
       <app-marker
         *ngFor="let pin of pins; let i = index"
         [pin]="pin"
+        [admin$]="admin$"
         [basePinSize]="basePinSize"
         [zoomLevel]="zoomLevel / zoomPinMod + 100 * (1 - 1/zoomPinMod)"
         [pos$]="(pinPositions$ | async)?.[i] ?? of()"
@@ -33,10 +34,9 @@
 <img
   [src]="(settingsMenu ? 'cog' : 'cog-outline') + '.svg'"
   alt="settings"
+  *ngIf="admin$ | async"
   class="settings"
   (click)="settingsMenu = !settingsMenu"
 >
 
-<app-settings-menu *ngIf="settingsMenu" [map$]="map$"
-/>
-<!--                   [mapId]="(map$ | async)?.ID ?? -1"-->
+<app-settings-menu *ngIf="settingsMenu" [map$]="map$"/>
