@@ -1,21 +1,24 @@
 <ng-container *ngIf="settingsMode; then settings; else main"/>
 <ng-template #main>
-    <div class="main default" [style.border-radius]="last ? '0 0 4px 4px' : '0'"
-         [routerLink]="['/', 'map', map.ID]"
-    >
-        <img class="thumbnail" [src]="'/api/images/' + map.ImageURL | secure | async" alt="No Image Found"/>
-        <div class="content">
-            {{map.Name}}
-        </div>
+  <div [routerLink]="['/', 'map', map.ID]" [style.border-radius]="last ? '0 0 4px 4px' : '0'"
+       class="main default"
+  >
+    <img [src]="'/api/images/' + map.ImageURL | secure | async" alt="No Image Found" class="thumbnail"/>
+    <div class="content">
+      {{ map.Name }}
     </div>
+  </div>
 </ng-template>
 <ng-template #settings>
-    <div class="main settings" [style.border-radius]="last ? '0 0 4px 4px' : '0'">
-        <img class="thumbnail" [src]="'/api/images/' + map.ImageURL | secure | async" alt="No Image Found"/>
-        <div class="content">
-            {{map.Name}}
-        </div>
-        <img class="action-icon" alt="" src="delete.svg" (click)="onDelete.emit()" *ngIf="map.owners.includes(userID$ | async) || (admin$ | async)"/>
-        <img class="action-icon" alt="" src="pencil.svg" *ngIf="map.owners.includes(userID$ | async) || (admin$ | async)"/>
+  <div [style.border-radius]="last ? '0 0 4px 4px' : '0'" class="main settings">
+    <img [src]="'/api/images/' + map.ImageURL | secure | async" alt="No Image Found" class="thumbnail"/>
+    <div class="content">
+      {{ map.Name }}
     </div>
+    <img (click)="onDelete.emit()" *ngIf="map.owners.includes((userID$ | async) ?? 0) || (admin$ | async)" alt=""
+         class="action-icon"
+         src="delete.svg"/>
+    <img *ngIf="map.owners.includes((userID$ | async) ?? 0) || (admin$ | async)" alt="" class="action-icon"
+         src="pencil.svg"/>
+  </div>
 </ng-template>

@@ -5,7 +5,7 @@ export class V2 {
   public constructor(x?: number | HTMLImageElement, y?: number) {
     if (typeof x === 'object') {
       this.x = x.offsetWidth;
-      this.y = x.offsetHeight
+      this.y = x.offsetHeight;
     } else {
       this.x = x ?? 0;
       this.y = y ?? 0;
@@ -37,10 +37,10 @@ export class V2 {
   }
 
   public min(min: V2): V2 {
-    return new V2(Math.min(this.x, min.x), Math.min(this.y, min.y))
+    return new V2(Math.min(this.x, min.x), Math.min(this.y, min.y));
   }
 
   public max(max: V2): V2 {
-    return new V2(Math.max(this.x, max.x), Math.max(this.y, max.y))
+    return new V2(Math.max(this.x, max.x), Math.max(this.y, max.y));
   }
 }

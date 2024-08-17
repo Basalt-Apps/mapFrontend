@@ -8,9 +8,8 @@ describe('PinEditFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PinEditFormComponent]
-    })
-    .compileComponents();
+      imports: [PinEditFormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PinEditFormComponent);
     component = fixture.componentInstance;

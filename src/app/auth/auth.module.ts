@@ -4,16 +4,12 @@ import { AuthService } from './services/auth.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { apiInterceptor } from '../interceptors/api.interceptor';
 
-
-
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   providers: [
     provideHttpClient(withInterceptors([apiInterceptor])),
-    AuthService
-  ]
+    AuthService,
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}
