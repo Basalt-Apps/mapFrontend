@@ -1,33 +1,33 @@
 <div
-  class="new"
+  *ngIf="(mapUploader$ | async) || (admin$ | async)"
   [routerLink]="['/', 'map', 'new']"
-  *ngIf="mapUploader$ | async"
+  class="new"
 >New Map
 </div>
-<div class="new-map-else"
-     *ngIf="!(mapUploader$ | async)"
+<div *ngIf="!((mapUploader$ | async) || (admin$ | async))"
+     class="new-map-else"
 ></div>
 
 <ng-container *ngIf="(maps$ | async) as maps">
   <div class="list">
     <app-map-list-item
-      *ngFor="let map of maps; let last = last; let i = index"
-      [map]="map"
       (onDelete)="onDelete(i, map.ID)"
-      [last]="last"
-      [settingsMode]="settingsMode"
+      *ngFor="let map of maps; let last = last; let i = index"
       [admin$]="admin$"
-    ></app-map-list-item>
+      [last]="last"
+      [map]="map"
+      [settingsMode]="settingsMode"
+    />
   </div>
 </ng-container>
 
 <div class="account">
   <div class="username">{{ username$ | async }}{{ (admin$|async) ? '*' : '' }}</div>
-  <img src="logout.svg" alt="log out" class="logout" (click)="onLogout()">
+  <img (click)="onLogout()" alt="log out" class="logout" src="logout.svg">
 </div>
 
-<img [src]="(settingsMode ? 'cog-outline' : 'cog') + '.svg'" alt="" class="settings" (click)="toggleSettingsMode()">
+<img (click)="toggleSettingsMode()" [src]="(settingsMode ? 'cog-outline' : 'cog') + '.svg'" alt="" class="settings">
 
 <div class="help">
-  <img src="account-question.svg" alt="help" [routerLink]="['/', 'help']">
+  <img [routerLink]="['/', 'help']" alt="help" src="account-question.svg">
 </div>
