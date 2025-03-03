@@ -1,5 +1,3 @@
 import { PinModel } from './pin.model';
 
-export type OmitPinPos = Omit<PinModel, 'Pos'>
-
-
+export type OmitPinPos = Omit<PinModel, 'Pos'>;

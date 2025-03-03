@@ -1,11 +1,11 @@
-<img src="map-marker.svg"
-     class="pin"
-     alt="pin"
+<img (click)="onClick()"
+     [style.height]="pinSize + 'px'"
      [style.left]="(pos$|async)?.x + 'px'"
      [style.top]="(pos$|async)?.y + 'px'"
      [style.width]="pinSize + 'px'"
-     [style.height]="pinSize + 'px'"
-     (click)="onClick()"
+     alt="pin"
+     class="pin"
+     src="map-marker.svg"
 >
 <!--<img src="map-marker.svg"-->
 <!--     class="pin fake"-->
@@ -15,20 +15,37 @@
 <!--     [style.width]="8 + 'px'"-->
 <!--     [style.height]="8 + 'px'"-->
 <!--&gt;-->
-<ng-container *ngIf="clicked$ | async; then pinClicked"/>
-
-<ng-template #pinClicked>
+<ng-container *ngIf="clicked$ | async">
   <app-popup
     [style.bottom]="'calc(100vh - ' + ((pos$|async)?.y ?? 0) + 'px)'"
     [style.left]="((pos$|async)?.x ?? 0) + pinSize / 2 - 150 + 'px'"
   >
     <div class="header">
-      <h1>{{pin.Name}}</h1>
+      <h1>{{ pin.Name }}</h1>
       <div class="buttons">
-        <img src="delete.svg" alt="" (click)="onDeleteButton()">
-        <img src="close.svg" alt="" (click)="onClosePopup()">
+        <img
+          (click)="onEdit()"
+          *ngIf="admin$ | async"
+          alt=""
+          src="pencil.svg"
+        >
+        <img
+          (click)="onDeleteButton()"
+          *ngIf="admin$ | async"
+          alt=""
+          src="delete.svg"
+        >
+        <img (click)="onClosePopup()" alt="" src="close.svg">
       </div>
     </div>
-    <p>{{pin.Content}}</p>
+    <p>{{ pin.Content }}</p>
   </app-popup>
-</ng-template>
+</ng-container>
+
+<app-pin-edit-form
+  (finished)="onEditClose()"
+  *ngIf="edit$ | async"
+  [pin]="pin"
+  [pos$]="pos$"
+>
+</app-pin-edit-form>

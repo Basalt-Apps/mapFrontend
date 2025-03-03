@@ -2,6 +2,7 @@ export interface TokenPayload {
   userID: number;
   admin: boolean;
   username: string;
-  exp: number,
-  iat: number
+  mapUploader: boolean;
+  exp: number;
+  iat: number;
 }

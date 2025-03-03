@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupComponent } from './popup.component';
+import { PinEditFormComponent } from './pin-edit-form.component';
 
-describe('PopupComponent', () => {
-  let component: PopupComponent;
-  let fixture: ComponentFixture<PopupComponent>;
+describe('PinEditFormComponent', () => {
+  let component: PinEditFormComponent;
+  let fixture: ComponentFixture<PinEditFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PopupComponent],
+      imports: [PinEditFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PopupComponent);
+    fixture = TestBed.createComponent(PinEditFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

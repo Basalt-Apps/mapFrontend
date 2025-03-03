@@ -4,12 +4,8 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-help',
   standalone: true,
-  imports: [
-    RouterLink
-  ],
+  imports: [RouterLink],
   templateUrl: './help.component.html',
-  styleUrl: './help.component.scss'
+  styleUrl: './help.component.scss',
 })
-export class HelpComponent {
-
-}
+export class HelpComponent {}

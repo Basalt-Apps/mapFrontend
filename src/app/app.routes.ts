@@ -1,10 +1,8 @@
 import { Routes } from '@angular/router';
-import {HomeComponent} from "./components/home/home.component";
-import {NewMapComponent} from "./components/new-map/new-map.component";
-import {MapComponent} from "./components/map/map.component";
-import {
-  LoginFormComponent
-} from './auth/components/login-form/login-form.component';
+import { HomeComponent } from './components/home/home.component';
+import { NewMapComponent } from './components/new-map/new-map.component';
+import { MapComponent } from './components/map/map.component';
+import { LoginFormComponent } from './auth/components/login-form/login-form.component';
 import { authGuard } from './guards/auth.guard';
 import { HelpComponent } from './components/help/help.component';
 
@@ -12,22 +10,22 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'map/new',
     component: NewMapComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'map/:id',
     component: MapComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'help',
     component: HelpComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'login',
@@ -35,6 +33,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: ''
-  }
+    redirectTo: '',
+  },
 ];

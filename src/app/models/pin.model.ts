@@ -1,4 +1,4 @@
-import {V2} from "./V2.class";
+import { V2 } from './V2.class';
 
 export interface PinModel {
   Name: string;

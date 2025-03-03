@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { MapUpdate } from '../models/map-update.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MapPositionService {
-  private mapComponentUpdateCallback?: (data: MapUpdate) => void
+  private mapComponentUpdateCallback?: (data: MapUpdate) => void;
 
-  constructor() { }
+  constructor() {}
 
   public sendUpdate(data: MapUpdate): void {
     this.mapComponentUpdateCallback?.(data);

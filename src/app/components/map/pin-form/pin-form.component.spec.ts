@@ -8,9 +8,8 @@ describe('PinFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PinFormComponent]
-    })
-    .compileComponents();
+      imports: [PinFormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PinFormComponent);
     component = fixture.componentInstance;
